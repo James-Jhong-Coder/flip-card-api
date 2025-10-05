@@ -1,5 +1,6 @@
 import {
-  Injectable,
+  Controller,
+  Get,
   OnModuleInit,
   OnApplicationBootstrap,
   OnModuleDestroy,
@@ -7,8 +8,8 @@ import {
   OnApplicationShutdown,
 } from '@nestjs/common';
 
-@Injectable()
-export class AppService
+@Controller('todo')
+export class TodoController
   implements
     OnModuleInit,
     OnApplicationBootstrap,
@@ -17,26 +18,27 @@ export class AppService
     OnApplicationShutdown
 {
   onModuleInit() {
-    console.log(AppService.name, 'OnModuleInit');
+    console.log(TodoController.name, 'OnModuleInit');
   }
 
   onApplicationBootstrap() {
-    console.log(AppService.name, 'OnApplicationBootstrap');
+    console.log(TodoController.name, 'OnApplicationBootstrap');
   }
 
   onModuleDestroy() {
-    console.log(AppService.name, 'OnModuleDestroy');
+    console.log(TodoController.name, 'OnModuleDestroy');
   }
 
   beforeApplicationShutdown(signal?: string) {
-    console.log(AppService.name, 'beforeApplicationShutdown', signal);
+    console.log(TodoController.name, 'beforeApplicationShutdown', signal);
   }
 
   onApplicationShutdown(signal?: string) {
-    console.log(AppService.name, 'onApplicationShutdown', signal);
+    console.log(TodoController.name, 'onApplicationShutdown', signal);
   }
 
-  getHello(): string {
-    return 'Hello World from AppService!';
+  @Get()
+  findAll() {
+    return ['todo-1', 'todo-2'];
   }
 }
