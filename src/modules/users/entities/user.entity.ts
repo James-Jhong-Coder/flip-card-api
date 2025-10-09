@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import * as bcrypt from 'bcrypt';
 export class User {
   @PrimaryGeneratedColumn()
   id: string;
@@ -18,11 +19,20 @@ export class User {
   passwordHash: string;
 
   @Column({ length: 50, nullable: true })
-  name?: string;
+  name?: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  async setPassword(plain: string) {
+    const salt = await bcrypt.genSalt(10);
+    this.passwordHash = await bcrypt.hash(plain, salt);
+  }
+
+  async comparePassword(plain: string) {
+    return bcrypt.compare(plain, this.passwordHash);
+  }
 }
