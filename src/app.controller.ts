@@ -4,6 +4,7 @@ import { Roles } from './decorators/roles/roles.decorator';
 import { RoleGuard } from './guards/role/role.guard';
 import { User } from './decorators/user/user.decorator';
 import { Authorization } from './decorators/authorization/authorization.decorator';
+import { Other } from './decorators/other/other.decorator';
 
 @Controller()
 export class AppController {
@@ -11,6 +12,7 @@ export class AppController {
 
   @UseGuards(RoleGuard)
   @Roles('admin', 'staff')
+  @Other(['other1', 'other2'])
   @Get()
   getHello(@User('name') name: string): string {
     return name;
