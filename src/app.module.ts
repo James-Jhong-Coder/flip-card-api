@@ -6,6 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/users/entities/user.entity';
+import { FlashCardModule } from './modules/flash-card/flash-card.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { User } from './modules/users/entities/user.entity';
         logging: true,
       }),
     }),
+    FlashCardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
