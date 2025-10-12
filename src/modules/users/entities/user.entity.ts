@@ -1,12 +1,15 @@
 import {
   Column,
   CreateDateColumn,
+  Entity,
   Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
+
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: string;
@@ -18,7 +21,7 @@ export class User {
   @Column({ length: 60 })
   passwordHash: string;
 
-  @Column({ length: 50, nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   name?: string | null;
 
   @CreateDateColumn()
@@ -33,6 +36,7 @@ export class User {
   }
 
   async comparePassword(plain: string) {
+    console.log('plain = ', plain);
     return bcrypt.compare(plain, this.passwordHash);
   }
 }
