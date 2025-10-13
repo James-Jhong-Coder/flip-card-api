@@ -1,45 +1,38 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
-
-interface CreateUserInput {
-  email: string;
-  password: string;
-  name?: string;
-}
+import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import type { ResultSetHeader } from 'mysql2';
+import { RegisterDto, UserRow } from '@/types/user';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User) private readonly userRepo: Repository<User>,
-  ) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  async create(data: CreateUserInput) {
-    const exists = await this.userRepo.exists({ where: { email: data.email } });
-    if (exists) throw new ConflictException('Email already registered');
-
-    const user = this.userRepo.create({
-      email: data.email,
-      name: data.name,
-    });
-    await user.setPassword(data.password);
-    return this.userRepo.save(user);
+  async findByEmail(email: string): Promise<UserRow | null> {
+    const rows = await this.dataSource.query<UserRow[]>(
+      'SELECT * FROM users WHERE email = ? LIMIT 1',
+      [email],
+    );
+    return rows[0] ?? null;
   }
 
-  findByEmail(email: string) {
-    return this.userRepo.findOne({ where: { email } });
+  async findById(id: number): Promise<UserRow | null> {
+    const rows = await this.dataSource.query<UserRow[]>(
+      'SELECT * FROM users WHERE id = ? LIMIT 1',
+      [id],
+    );
+    return rows[0] ?? null;
   }
 
-  async findById(id: string) {
-    const user = await this.userRepo.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return user;
+  async create(registerData: RegisterDto) {
+    const { password, email, name } = registerData;
+    const hash = await bcrypt.hash(password, 10);
+    const res = await this.dataSource.query<ResultSetHeader>(
+      'INSERT INTO users (email, password_hash, name) VALUES (?, ?, ?)',
+      [email, hash, name ?? null],
+    );
+    const newId = res.insertId;
+    return this.findById(newId);
   }
 }
