@@ -32,7 +32,6 @@ export class AuthController {
     _dto: LoginDto,
     @Request() req: any,
   ) {
-    console.log('enter!! login');
     return this.authService.login(req.user);
   }
 

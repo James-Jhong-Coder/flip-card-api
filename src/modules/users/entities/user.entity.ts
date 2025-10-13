@@ -36,7 +36,6 @@ export class User {
   }
 
   async comparePassword(plain: string) {
-    console.log('plain = ', plain);
     return bcrypt.compare(plain, this.passwordHash);
   }
 }

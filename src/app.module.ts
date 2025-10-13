@@ -7,11 +7,13 @@ import { AuthModule } from './modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/users/entities/user.entity';
 import { FlashCardModule } from './modules/flash-card/flash-card.module';
+import { Flashcard } from './modules/flash-card/entities/flashcard.entity';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
+    FlashCardModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -24,12 +26,12 @@ import { FlashCardModule } from './modules/flash-card/flash-card.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User],
+        entities: [User, Flashcard],
         synchronize: true,
         logging: true,
+        collation: 'utf8mb4_unicode_ci',
       }),
     }),
-    FlashCardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
