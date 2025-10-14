@@ -1,10 +1,8 @@
-// src/modules/cards/dto/create-card.dto.ts
-import { IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { CardLanguage } from '../entities/flashcard.entity';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateCardDto {
-  @IsEnum(CardLanguage)
-  language: CardLanguage;
+  @IsString()
+  language: string;
 
   @IsString()
   @IsNotEmpty()
