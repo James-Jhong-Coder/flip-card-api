@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { ResultSetHeader } from 'mysql2';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
-import { FlashCardListSearchParams, FlashCardRow } from './types/flashcard.type';
+import { FlashCardListSearchParams, FlashCardRow, LANGUAGE_TYPE } from './types/flashcard.type';
 
 @Injectable()
 export class FlashCardService {
@@ -137,6 +137,19 @@ export class FlashCardService {
       page: _page,
       limit: _limit,
       count: Number(count),
+    };
+  }
+  async getStudyCards(language: LANGUAGE_TYPE, limit = 30) {
+    const sql = `
+      SELECT id, language, front, back, created_at, updated_at
+      FROM flashcards
+      WHERE language = ?
+      ORDER BY RAND()
+      LIMIT ?
+    `;
+    const rows = await this.dataSource.query<FlashCardRow[]>(sql, [language, limit]);
+    return {
+      rows,
     };
   }
 }

@@ -67,4 +67,12 @@ export class FlashCardController {
     const userId = Number(req.user.id);
     return this.flashCardService.remove(userId, dto.cardId);
   }
+
+  @Get('study')
+  getStudyCard(
+    @Query('language') language: LANGUAGE_TYPE,
+    @Query('limit', new DefaultValuePipe(30), ParseIntPipe) limit = 30,
+  ) {
+    return this.flashCardService.getStudyCards(language, limit);
+  }
 }
