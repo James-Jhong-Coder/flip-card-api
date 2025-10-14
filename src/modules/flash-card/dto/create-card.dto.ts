@@ -1,7 +1,7 @@
-// src/modules/cards/dto/create-card.dto.ts
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateCardDto {
+  @IsString()
   language: string;
 
   @IsString()

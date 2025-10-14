@@ -12,8 +12,7 @@ export type FlashCardRow = {
 
 export type FlashCardListSearchParams = {
   userId: number;
-  id: number;
-  lang?: LANGUAGE_TYPE;
+  language?: LANGUAGE_TYPE;
   page: number;
   limit: number;
   front?: string;

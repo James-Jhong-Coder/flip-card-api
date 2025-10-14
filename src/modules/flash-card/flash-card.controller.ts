@@ -44,8 +44,7 @@ export class FlashCardController {
   @Get()
   list(
     @Req() req: any,
-    @Query('id', new ParseIntPipe()) id: number,
-    @Query('lang') lang?: LANGUAGE_TYPE,
+    @Query('language') language?: LANGUAGE_TYPE,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit = 20,
     @Query('front') front?: string,
@@ -54,8 +53,7 @@ export class FlashCardController {
     const userId = Number(req.user.id);
     const searchParams = {
       userId,
-      id,
-      lang,
+      language,
       page,
       limit,
       front,
@@ -65,8 +63,8 @@ export class FlashCardController {
   }
 
   @Delete()
-  remove(@Req() req: any, dto: DeleteCardDto) {
+  remove(@Req() req: any, @Body() dto: DeleteCardDto) {
     const userId = Number(req.user.id);
-    return this.flashCardService.remove(userId, dto.id);
+    return this.flashCardService.remove(userId, dto.cardId);
   }
 }

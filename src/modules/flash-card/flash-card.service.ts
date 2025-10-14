@@ -84,19 +84,19 @@ export class FlashCardService {
       `DELETE FROM flashcards WHERE id = ? AND user_id = ?`,
       [id, userId],
     );
-    return { ok: true };
+    return {};
   }
 
   async list(searchParams: FlashCardListSearchParams) {
-    const { userId, lang, page = 1, limit = 20, front, back } = searchParams;
+    const { userId, language, page = 1, limit = 20, front, back } = searchParams;
     const _page = Math.max(1, Number(page) || 1);
     const _limit = Math.min(100, Math.max(1, Number(limit) || 20));
     const offset = (_page - 1) * _limit;
     const where: string[] = ['user_id = ?'];
     const params: any[] = [userId];
-    if (lang) {
+    if (language) {
       where.push('language = ?');
-      params.push(lang);
+      params.push(language);
     }
     if (front?.trim()) {
       where.push('front LIKE ?');
@@ -120,7 +120,7 @@ export class FlashCardService {
       offset,
     ]);
 
-    const countSql = `SELECT COUNT(*) AS cnt FROM flashcards ${whereSql}`;
+    const countSql = `SELECT COUNT(*) AS count FROM flashcards ${whereSql}`;
     const [{ count }] = await this.dataSource.query<{ count: number }[]>(countSql, params);
 
     const items = listRows.map((row) => ({
@@ -129,14 +129,14 @@ export class FlashCardService {
       language: row.language,
       front: row.front,
       back: row.back,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
+      createdAt: new Date(row.created_at).getTime(),
+      updatedAt: new Date(row.updated_at).getTime(),
     }));
     return {
       items,
       page: _page,
       limit: _limit,
-      count,
+      count: Number(count),
     };
   }
 }
