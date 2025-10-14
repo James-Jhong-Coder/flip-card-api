@@ -6,7 +6,6 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FlashCardModule } from '@/modules/flash-card/flash-card.module';
-import { SchemaModule } from '@/modules/schema/schema.module';
 import { APP_PIPE } from '@nestjs/core';
 
 @Module({
@@ -32,7 +31,6 @@ import { APP_PIPE } from '@nestjs/core';
         collation: 'utf8mb4_unicode_ci',
       }),
     }),
-    SchemaModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,9 +1,10 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
-  Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -14,7 +15,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FlashCardService } from './flash-card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
-import { CardLanguage } from './entities/flashcard.entity';
+import { DeleteCardDto } from './dto/delete-card.dto';
+import type { LANGUAGE_TYPE } from './types/flashcard.type';
 
 @UseGuards(JwtAuthGuard)
 @Controller('flash-card')
@@ -23,38 +25,48 @@ export class FlashCardController {
 
   @Get('stats')
   stats(@Req() req: any) {
-    return this.flashCardService.stats(req.user.id);
+    const userId = Number(req.user.id);
+    return this.flashCardService.stats(userId);
   }
 
   @Post()
   create(@Req() req: any, @Body() dto: CreateCardDto) {
-    return this.flashCardService.create(req.user.id, dto);
+    const userId = Number(req.user.id);
+    return this.flashCardService.create(userId, dto);
+  }
+
+  @Patch()
+  update(@Req() req: any, @Body() dto: UpdateCardDto) {
+    const userId = Number(req.user.id);
+    return this.flashCardService.update(userId, dto);
   }
 
   @Get()
   list(
     @Req() req: any,
-    @Query('lang') lang?: CardLanguage,
-    @Query('page') page = '1',
-    @Query('limit') limit = '20',
-    @Query('q') q?: string,
+    @Query('id', new ParseIntPipe()) id: number,
+    @Query('lang') lang?: LANGUAGE_TYPE,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit = 20,
+    @Query('front') front?: string,
+    @Query('back') back?: string,
   ) {
-    return this.flashCardService.list(
-      req.user.id,
+    const userId = Number(req.user.id);
+    const searchParams = {
+      userId,
+      id,
       lang,
-      Number(page),
-      Number(limit),
-      q,
-    );
+      page,
+      limit,
+      front,
+      back,
+    };
+    return this.flashCardService.list(searchParams);
   }
 
-  @Patch()
-  update(@Req() req: any, @Body() dto: UpdateCardDto) {
-    return this.flashCardService.update(req.user.id, dto);
-  }
-
-  @Delete(':id')
-  remove(@Req() req: any, @Param('id') id: string) {
-    return this.flashCardService.remove(req.user.id, id);
+  @Delete()
+  remove(@Req() req: any, dto: DeleteCardDto) {
+    const userId = Number(req.user.id);
+    return this.flashCardService.remove(userId, dto.id);
   }
 }

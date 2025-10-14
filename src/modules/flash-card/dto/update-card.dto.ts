@@ -4,5 +4,5 @@ import { IsString } from 'class-validator';
 
 export class UpdateCardDto extends PartialType(CreateCardDto) {
   @IsString()
-  cardId: string;
+  cardId: number;
 }
