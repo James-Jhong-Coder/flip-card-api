@@ -11,7 +11,6 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async register(@Body() dto: RegisterDto) {
-    console.log('enter!!!', dto);
     return this.authService.register(dto);
   }
 
