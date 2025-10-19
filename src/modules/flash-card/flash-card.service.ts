@@ -123,7 +123,8 @@ export class FlashCardService {
     const countSql = `SELECT COUNT(*) AS count FROM flashcards ${whereSql}`;
     const [{ count }] = await this.dataSource.query<{ count: number }[]>(countSql, params);
 
-    const items = listRows.map((row) => ({
+    const items = listRows.map((row, index) => ({
+      rowNo: offset + index + 1,
       id: row.id,
       userId: row.user_id,
       language: row.language,
