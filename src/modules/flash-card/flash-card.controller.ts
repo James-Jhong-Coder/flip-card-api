@@ -70,9 +70,11 @@ export class FlashCardController {
 
   @Get('study')
   getStudyCard(
+    @Req() req: any,
     @Query('language') language: LANGUAGE_TYPE,
     @Query('limit', new DefaultValuePipe(30), ParseIntPipe) limit = 30,
   ) {
-    return this.flashCardService.getStudyCards(language, limit);
+    const userId = Number(req.user.id);
+    return this.flashCardService.getStudyCards(language, userId, limit);
   }
 }

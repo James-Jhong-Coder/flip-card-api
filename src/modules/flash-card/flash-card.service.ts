@@ -140,15 +140,16 @@ export class FlashCardService {
       count: Number(count),
     };
   }
-  async getStudyCards(language: LANGUAGE_TYPE, limit = 30) {
+  async getStudyCards(language: LANGUAGE_TYPE, userId, limit = 30) {
     const sql = `
       SELECT id, language, front, back, created_at, updated_at
       FROM flashcards
-      WHERE language = ?
+      WHERE language = ? AND user_id = ? 
       ORDER BY RAND()
       LIMIT ?
     `;
-    const rows = await this.dataSource.query<FlashCardRow[]>(sql, [language, limit]);
+    console.log('sql = ', sql, userId);
+    const rows = await this.dataSource.query<FlashCardRow[]>(sql, [language, userId, limit]);
     return {
       rows,
     };
