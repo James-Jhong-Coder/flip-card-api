@@ -11,6 +11,26 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flip-card-api
+    ports:
+      - source: 3000
+      - target: 3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: pnpm run start:dev
+    restart: unless-stopped
+    networks:
+      - flip-card-net
+
 
 volumes:
   mysql_data:
+
+networks:
+  flip-card-net:
+    driver: bridge
