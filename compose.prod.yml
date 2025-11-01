@@ -24,7 +24,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     container_name: flip-card-api
     env_file:
       - .env.production
