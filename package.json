@@ -15,6 +15,7 @@
     "dev:compose:log": "docker compose -f compose.dev.yml logs -f api",
     "prod:compose:start": "docker compose -f compose.prod.yml up -d",
     "prod:compose:down": "docker compose -f compose.prod.yml down",
+    "prod:compose:log": "docker compose -f compose.prod.yml logs -f api",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
