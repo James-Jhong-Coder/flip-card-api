@@ -1,0 +1,48 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: flip-card-mysql
+    env_file:
+      - .env.production
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # 生產環境不對外曝光 3306，只讓同網路的服務存取
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-p${DB_ROOT_PASSWORD}']
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    restart: unless-stopped
+    networks:
+      - flip-card-net
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flip-card-api
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql            # 覆蓋為容器內服務名稱
+    ports:
+      - "3000:3000"              # 對外開放 API
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: ["node", "dist/main.js"]
+    restart: unless-stopped
+    networks:
+      - flip-card-net
+volumes:
+  mysql_data:
+
+networks:
+  flip-card-net:
+    driver: bridge
