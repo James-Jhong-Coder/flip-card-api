@@ -10,7 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "dev:compose:start": "docker compose -f compose.dev.yml up -d",
+    "dev:compose:start": "docker compose -f compose.dev.yml up -d --build",
     "dev:compose:down": "docker compose -f compose.dev.yml down",
     "dev:compose:log": "docker compose -f compose.dev.yml logs -f api",
     "prod:compose:start": "docker compose -f compose.prod.yml up -d",
