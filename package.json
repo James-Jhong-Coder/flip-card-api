@@ -13,7 +13,7 @@
     "dev:compose:start": "docker compose -f compose.dev.yml up -d --build",
     "dev:compose:down": "docker compose -f compose.dev.yml down",
     "dev:compose:log": "docker compose -f compose.dev.yml logs -f api",
-    "prod:compose:start": "docker compose -f compose.prod.yml up -d",
+    "prod:compose:start": "docker compose -f compose.prod.yml up -d --build",
     "prod:compose:down": "docker compose -f compose.prod.yml down",
     "prod:compose:log": "docker compose -f compose.prod.yml logs -f api",
     "start:debug": "nest start --debug --watch",
