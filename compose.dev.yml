@@ -31,7 +31,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      target: builder # 用 builder 階段，保留 devDependencies
     container_name: flip-card-api
     env_file:
       - .env
